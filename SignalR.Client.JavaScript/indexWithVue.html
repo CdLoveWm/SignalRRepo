@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue.js中使用SignalR。完整的Vue项目使用SignalR，在SignalR.Client.Vue中</title>
+</head>
+<body>
+    <div id="app">
+        <h1>Vue.js中使用SignalR。完整的Vue项目使用SignalR，在SignalR.Client.Vue中</h1>
+        <div>
+            <textarea id="message" v-model="newMessag"></textarea>
+        </div>
+        <div>
+            <input type="button" value="发送" id="sendButton" @click="SendMessage">
+        </div>
+        <br>
+        <div>收到消息：</div>
+        <ul id="messagesList" v-for="(item,index) in messagesList">
+            <li>{{ item }}</li>
+        </ul>
+    </div>
+</body>
+</html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js" 
+    integrity="sha512-E4Sx8LBhBkvECiNXYUoHIZBZ7OgjNV5bGTkVp8lwKPty/gqlVFkNz69a38XN1q8ODYLyDbeAbJYMXZQoEZ8Bfw==" 
+    crossorigin="anonymous" referrerpolicy="no-referrer">
+</script>
+<script src="/vue.min.js">
+</script>
+<script src="/signalRVueHelper.js"></script>
