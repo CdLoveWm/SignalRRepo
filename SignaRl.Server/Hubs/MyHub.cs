@@ -39,6 +39,7 @@ namespace SignaRl.Server.Hubs
         /// </summary>
         /// <param name="clientName"></param>
         /// <param name="message"></param>
+        //[HubMethodName("SendMessageToUser")] // 使用特性标记客户端要调用的方法名称，客户端就直接调用SendMessageToUser，此时调用SendMessage是无效的
         public async void SendMessage(string clientName, object message)
         {
             Console.WriteLine($"收到消息：{message}");
