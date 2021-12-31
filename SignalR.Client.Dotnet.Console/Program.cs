@@ -11,6 +11,7 @@ namespace SignalR.Client.Dotnet.ConsoleClient
             while (true)
             {
                 string message = Console.ReadLine();
+                // 这只是为了调用不同的方法做的区分，没有任何实质意义
                 switch (message)
                 {
                     case "id":

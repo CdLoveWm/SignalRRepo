@@ -36,6 +36,7 @@ namespace SignaRl.Server
                 );
             });
             services.AddTransient<IHubServices, HubServices>();
+            // 添加SignalR
             services.AddSignalR();
             services.AddControllersWithViews();
         }
@@ -63,6 +64,7 @@ namespace SignaRl.Server
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                // 配置Hub对应的路由
                 endpoints.MapHub<MyHub>("/myhub");
             });
         }

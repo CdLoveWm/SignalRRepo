@@ -22,8 +22,8 @@ namespace SignalR.Client.Dotnet.ConsoleClient
         {
             // 建立连接
             connection = new HubConnectionBuilder()
-                .WithUrl("http://localhost:5000/myhub")
-                .WithAutomaticReconnect()
+                .WithUrl("http://localhost:5000/myhub") // 这个链接是服务端Hub地址
+                .WithAutomaticReconnect() // 自动重连
                 .Build();
             #region 事件绑定
             // 重连事件

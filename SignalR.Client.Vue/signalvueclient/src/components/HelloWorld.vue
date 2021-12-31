@@ -1,94 +1,70 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li>
-        <a
-          href="https://vuejs.org"
-          target="_blank"
-        >
-          Core Docs
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://forum.vuejs.org"
-          target="_blank"
-        >
-          Forum
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://chat.vuejs.org"
-          target="_blank"
-        >
-          Community Chat
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://twitter.com/vuejs"
-          target="_blank"
-        >
-          Twitter
-        </a>
-      </li>
+    <h1>{{ tip }}</h1>
+    <div>
+      <textarea id="message" v-model="newMessag"></textarea>
+      </div>
+      <div>
+          <input type="button" value="发送" id="sendButton" @click="SendMessage">
+      </div>
       <br>
-      <li>
-        <a
-          href="http://vuejs-templates.github.io/webpack/"
-          target="_blank"
-        >
-          Docs for This Template
-        </a>
-      </li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li>
-        <a
-          href="http://router.vuejs.org/"
-          target="_blank"
-        >
-          vue-router
-        </a>
-      </li>
-      <li>
-        <a
-          href="http://vuex.vuejs.org/"
-          target="_blank"
-        >
-          vuex
-        </a>
-      </li>
-      <li>
-        <a
-          href="http://vue-loader.vuejs.org/"
-          target="_blank"
-        >
-          vue-loader
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/awesome-vue"
-          target="_blank"
-        >
-          awesome-vue
-        </a>
-      </li>
-    </ul>
+      <div>收到消息：</div>
+      <ul v-bind:key="index" v-for="(item,index) in messagesList">
+          <li>{{ item }}</li>
+      </ul>
   </div>
 </template>
 
 <script>
+// const signalR = require('@microsoft/signalr')
+// eslint-disable-next-line no-unused-vars
+import * as signalR from '@aspnet/signalr'
 export default {
   name: 'HelloWorld',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      tip: '这是Vue项目中使用SignalR示例',
+      messagesList: [],
+      newMessag: '',
+      connection: null
+    }
+  },
+  mounted: function () {
+    this.init()
+  },
+  methods: {
+    // 初始化连接
+    init: function () {
+      this.connection = new signalR.HubConnectionBuilder()
+        .withUrl('http://localhost:5000/myhub') // SignrlR服务地址
+        .configureLogging(signalR.LogLevel.Information)
+        .build()
+      // 监听ReceiveMessage
+      this.connection.on('ReceiveMessage', (user, message) => {
+        const encodedMsg = `${user} says ${message}`
+        this.messagesList.push(encodedMsg)
+      })
+      // 开启连接
+      async function start () {
+        try {
+          await this.connection.start()
+          console.log('connected')
+        } catch (err) {
+          console.log(err)
+          setTimeout(() => start(), 5000)
+        }
+      };
+      // 连接关闭时的事件（关闭时重新启动）
+      this.connection.onclose(async () => {
+        await start()
+      })
+      start()
+    },
+    // 消息发送
+    SendMessage: function () {
+      const user = 'js-vue client'
+      // 执行SignalR服务器SendMessage方法
+      this.connection.invoke('SendMessage', user, this.newMessag).catch(err => console.error(err))
     }
   }
 }
@@ -111,3 +87,5 @@ a {
   color: #42b983;
 }
 </style>
+
+// npm install --save @microsoft/signalr
